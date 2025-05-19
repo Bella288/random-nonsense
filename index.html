@@ -3835,12 +3835,12 @@ t.match("#Copula ".concat(e)).term(1).tag("Person","is-may"),t.match("".concat(e
         let currentTitle = document.title;
         const observer = new MutationObserver((mutations) => {
           if(document.title !== currentTitle) {
-            PERCH.parentWindow.postMessage({type:"changePageTitle", pageTitle:document.title}, "https://perchance.org");
+            PERCH.parentWindow.postMessage({type:"changePageTitle", pageTitle:document.title}, "https://github.com/Bella288/random-nonsense/blob/main/icon.jpg");
             currentTitle = document.title;
           }
           const newFaviconHref = getFaviconHref();
           if(newFaviconHref !== currentFaviconHref) {
-            PERCH.parentWindow.postMessage({type:"changeFavicon", href:newFaviconHref}, "https://perchance.org");
+            PERCH.parentWindow.postMessage({type:"changeFavicon", href:newFaviconHref}, "https://github.com/Bella288/random-nonsense/blob/main/icon.jpg");
             currentFaviconHref = newFaviconHref;
           }
         });
@@ -3989,7 +3989,7 @@ t.match("#Copula ".concat(e)).term(1).tag("Person","is-may"),t.match("".concat(e
         try {
           const favicon = document.querySelector('link[rel="icon"], link[rel="shortcut icon"]');
           if(favicon) {
-            PERCH.parentWindow.postMessage({type:"changeFavicon", href:favicon.href}, "https://perchance.org");
+            PERCH.parentWindow.postMessage({type:"changeFavicon", href:favicon.href}, "https://github.com/Bella288/random-nonsense/blob/main/icon.jpg");
           }
         } catch(e) {
           console.error(e);
