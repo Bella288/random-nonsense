@@ -110,7 +110,7 @@ exports.handler = async function (event, context) {
     "The [noun] goes into the [noun2] press that turns the [noun3] into a pressed [noun4]."
   ];
   const noun = [
-    "pig","cow","alligator","chicken","zebra","dog","crayfish","pigeon","bird","fish","shark","whale","dolphin","octopus","squid","crab","lobster","shrimp","turtle","frog","toad","snake","lizard","gecko","spider","ant","bee","wasp","fly","mosquito","beetle","butterfly","moth","dragonfly","grasshopper","cricket","cockroach","termite","centipede","millipede","scorpion","tarantula","horse","donkey","cat","jellyfish^0.5","worm","wire","fire","hose","house","human","flea","note","ice cube","microphone","water","waiter","animal","creature","muffin","hamster","hamper","child","kid","adult","parent","still water","book","chair","box","couch","sofa","piano","stool","keyboard","mouse","computer","desk","drink","soda","package","bin","garbage can","garbage bin","paint","painting","painter","picture","phone","plant","planter","frame","vaccum","Roomba","robot","stapler","button","pillow","mattress","cushion","wheel","tire","car","truck","semi","wall","spray bottle","outlet","cord","cable","net","network","newt","printer","piston","tank","drill","screwdriver","vent","donut","llama","sign","bubble","rock","pebble","shelf","clock","alien","wet wipe","wipe","pencil","pen","lamp","fridge","world"
+    "pig","cow","alligator","chicken","zebra","dog","crayfish","pigeon","bird","fish","shark","whale","dolphin","octopus","squid","crab","lobster","shrimp","turtle","frog","toad","snake","lizard","gecko","spider","ant","bee","wasp","fly","mosquito","beetle","butterfly","moth","dragonfly","grasshopper","cricket","cockroach","termite","centipede","millipede","scorpion","tarantula","horse","donkey","cat","jellyfish","worm","wire","fire","hose","house","human","flea","note","ice cube","microphone","water","waiter","animal","creature","muffin","hamster","hamper","child","kid","adult","parent","still water","book","chair","box","couch","sofa","piano","stool","keyboard","mouse","computer","desk","drink","soda","package","bin","garbage can","garbage bin","paint","painting","painter","picture","phone","plant","planter","frame","vaccum","Roomba","robot","stapler","button","pillow","mattress","cushion","wheel","tire","car","truck","semi","wall","spray bottle","outlet","cord","cable","net","network","newt","printer","piston","tank","drill","screwdriver","vent","donut","llama","sign","bubble","rock","pebble","shelf","clock","alien","wet wipe","wipe","pencil","pen","lamp","fridge","world"
   ];
   const common_noun = noun;
   const adjective = [
@@ -132,7 +132,7 @@ exports.handler = async function (event, context) {
     "will pat","will befriend","will help","will berate","will beat","will feed","will punch","will hit","will remove","will begin","will use","will assist","will stop","will lead","will break","will fix","will play","will whip","will kill","will spin","will kick","will arrest","will release","will lose","will win","will rotate"
   ];
   const location = [
-    "on {the|this|that} island","in {the|this|that} valley","{around|in} here","over there","under this {thing^2|thingie^0.5}","behind this"
+    "on {the|this|that} island","in {the|this|that} valley","{around|in} here","over there","under this {thing|thingie}","behind this"
   ];
   const loctell = [
     "{get|stay} away from","{get|stay|come} out of","{come|go} towards"
@@ -140,27 +140,6 @@ exports.handler = async function (event, context) {
   const person = [
     "Grandma","Grandpa","Mom","Dad","Mother","Father","Uncle","Sister","Brother","Friend","Teacher","Professor","Mr. President","Mrs. President","Ma'am","Sir","Gentleman","Stranger","Stepmother","Stepfather","Buddy","Dude","Bro","Mr. Vice President","Mrs. Vice President","Kamala Harris","Donald Trump","Joe Biden","Hillary Clinton","Bill Clinton","Bella","Jake","Joe","Jeff","Jeffry","Samantha","James","Jamie","William","Will","Becky","Rebecca","Sara","Bob","Bobby","Richard","Dickie","Rick","Dave","David","Susan","Suzy","Guys","Ladies and Gentlelmen","Ladies","Gentlemen","Dudes","Gals","Girls","Boys","Kids","Children","Adults","Parents","Teachers","Professors","Students","Classmates","Coworkers","Colleagues","Employees","Employers","Bosses","Managers","Supervisors","Subordinates","Peers","Friends","Enemies","Rivals","Competitors","Opponents","Allies","Partners","Associates","Acquaintances","Strangers","Neighbors","Roommates","Housemates","Flatmates","Tenants"
   ];
-  function pickWeighted(list, usedSet) {
-    let pool = [];
-    for (let entry of list) {
-      let m = entry.match(/(.*)\^([\d.]+)$/);
-      let val, weight;
-      if (m) {
-        val = m[1].trim();
-        weight = Math.round(Number(m[2]) * 100);
-      } else {
-        val = entry;
-        weight = 1;
-      }
-      if (!usedSet.has(val)) {
-        for (let i = 0; i < weight; i++) pool.push(val);
-      }
-    }
-    if (!pool.length) return null;
-    let sel = pool[Math.floor(Math.random() * pool.length)];
-    usedSet.add(sel);
-    return sel;
-  }
   function rand(list, usedSet) {
     let filtered = list.filter(x => !usedSet.has(x));
     if (!filtered.length) return null;
@@ -179,26 +158,15 @@ exports.handler = async function (event, context) {
   function upperCase(str){ return (str||'').toUpperCase(); }
   function lowerCase(str){ return (str||'').toLowerCase(); }
   function curlyExpand(str) {
-    while (/\{([^{}]+)\}/.test(str)) {
-      str = str.replace(/\{([^{}]+)\}/g, function(_, c) {
-        if (/^\d+-\d+$/.test(c)) {
-          let [a, b] = c.split('-').map(Number);
-          return (a + Math.floor(Math.random() * (b - a + 1))).toString();
-        }
-        if (/^import:common-noun$/i.test(c)) return '[import_common_noun]';
-        let options = c.split('|').map(s => s.trim());
-        let weighted = [];
-        for (let opt of options) {
-          let m = opt.match(/(.*)\^([\d.]+)$/);
-          if (m) {
-            let [__, txt, w] = m;
-            for (let i = 0; i < Math.round(Number(w) * 100); i++) weighted.push(txt.trim());
-          } else weighted.push(opt);
-        }
-        return weighted[Math.floor(Math.random() * weighted.length)];
-      });
-    }
-    return str;
+    return str.replace(/\{([^{}]+)\}/g, function(_, c) {
+      if (/^\d+-\d+$/.test(c)) {
+        let [a, b] = c.split('-').map(Number);
+        return (a + Math.floor(Math.random() * (b - a + 1))).toString();
+      }
+      if (/^import:common-noun$/i.test(c)) return '[import_common_noun]';
+      let options = c.split('|').map(s => s.trim());
+      return options[Math.floor(Math.random() * options.length)];
+    });
   }
   function handleS(str, noun) {
     if (!noun) return str;
@@ -254,10 +222,7 @@ exports.handler = async function (event, context) {
       for (let i = 0; i < nums.length; i++) {
         let n = nums[i];
         let key = type + (n > 1 ? n : '');
-        let picked = (type === 'noun' || type === 'import_common_noun')
-          ? pickWeighted(list, used[type])
-          : rand(list, used[type]);
-        vars[key] = picked || '';
+        vars[key] = rand(list, used[type]) || '';
       }
     }
     let curlyVars = [];
@@ -265,11 +230,11 @@ exports.handler = async function (event, context) {
     let curlyMatch, curlyIdx = 1;
     while ((curlyMatch = curlyRe.exec(template)) !== null) {
       let key = "import_common_noun" + (curlyMatch[1] ? curlyMatch[1] : (curlyIdx > 1 ? curlyIdx : ""));
-      vars[key] = pickWeighted(common_noun, used['import_common_noun']) || '';
+      vars[key] = rand(common_noun, used['import_common_noun']) || '';
       curlyIdx++;
     }
     if (curlyIdx > 1 && !vars["import_common_noun"]) {
-      vars["import_common_noun"] = pickWeighted(common_noun, used['import_common_noun']) || '';
+      vars["import_common_noun"] = rand(common_noun, used['import_common_noun']) || '';
     }
     return vars;
   }
