@@ -108,6 +108,7 @@ exports.handler = async function (event, context) {
     "HELP! There is {a} FUCKING [adjective.upperCase] [noun.upperCase] IN MY HOUSE AND IT'S [verbIng.upperCase] ME [adverb.upperCase]!",
     "ATTENTION ALL VIEWERS, THERE IS A [noun.upperCase] ON THE SITE COURT YARD AND IT IS FUCKING [adjective.upperCase]!",
     "The [noun] goes into the [noun2] press that presses the [noun3] into a pressed [noun4].",
+    "The [noun] goes into the [noun] press that presses the [noun] into a pressed [noun].",
     "Umm, guys, why is there {a} [noun] here? Also, why is it [verbIng]?",
     "Umm, guys, why is there {a} [adjective] [noun] here? Also, why is it [verbIng]?",
     "Umm, guys, why is there {a} [adjective] [noun] here? Also, why is it [verbIng] [adverb]?",
