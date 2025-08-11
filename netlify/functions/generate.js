@@ -1,4 +1,4 @@
-exports.handler = async function(event, context) {
+exports.handler = async function (event, context) {
   const outputs = [
     "{This|That} [noun] is so [adjective]!",
     "I wish I could [verbPresent] that [noun].",
@@ -20,12 +20,12 @@ exports.handler = async function(event, context) {
     "Please avoid [noun]s at all costs. Failiure to do so may cause injury or death.",
     "What is that [noun] [verbIng]?",
     "Why is that [noun] [verbIng]?",
-    "OH CRAP! THAT [noun.upperCase] IS [verbIng.upperCase] THAT [noun.upperCase]!",
-    "HOLY SHIT! THAT [noun.upperCase] IS [verbIng.upperCase] THAT [adjective.upperCase] [noun.upperCase]!",
-    "MAKE IT STOP! THAT [noun.upperCase] IS [verbIng.upperCase] THAT [noun.upperCase] TO DEATH!",
-    "FOR THE LOVE OF ALL THAT IS HOLY, THAT [noun.upperCase] IS [verbIng.upperCase] THAT [adjective.upperCase] [noun.upperCase] TO DEATH!",
+    "OH CRAP! THAT [noun.upperCase] IS [verbIng.upperCase] THAT [noun2.upperCase]!",
+    "HOLY SHIT! THAT [noun.upperCase] IS [verbIng.upperCase] THAT [adjective.upperCase] [noun2.upperCase]!",
+    "MAKE IT STOP! THAT [noun.upperCase] IS [verbIng.upperCase] THAT [noun2.upperCase] TO DEATH!",
+    "FOR THE LOVE OF ALL THAT IS HOLY, THAT [noun.upperCase] IS [verbIng.upperCase] THAT [adjective.upperCase] [noun2.upperCase] TO DEATH!",
     "Now THAT is one [adjective] [noun]!",
-    "Why did that [noun] choose to [verbPresent] that [noun]?",
+    "Why did that [noun] choose to [verbPresent] that [noun2]?",
     "Why can't that [noun] be more [adjective]?",
     "PLEASE DO NOT THE [noun.upperCase]!",
     "JESUS FUCKING CHRIST, YOU HAD BETTER NOT [verbPresent.upperCase] THAT [adjective.upperCase] [noun.upperCase]!",
@@ -38,7 +38,7 @@ exports.handler = async function(event, context) {
     "PUT THE [adjective.upperCase] [noun.upperCase] DOWN!",
     "PUT THE [noun.upperCase] DOWN!",
     "[person], why do you choose to be so [adjective]?",
-    "[person], do you know why that [noun] is so [adjective]?",
+    "[person], do you know why that [noun] is so [adjective2]?",
     "[person], can you please stop trying to [verbPresent] that [adjective] [noun]?",
     "[person], can you please stop trying to [verbPresent] that [noun]?",
     "[person], stop trying to [verbPresent] that [adjective] [noun]!",
@@ -57,14 +57,14 @@ exports.handler = async function(event, context) {
     "[person.upperCase], WHAT THE FUCK ARE YOU DOING?",
     "[person.upperCase], WHAT THE FUCK ARE YOU DOING TO THAT [noun.upperCase]?",
     "[person.upperCase], WHAT THE FUCK ARE YOU DOING TO THAT [adjective.upperCase] [noun.upperCase]?",
-    "What's even worse than a [noun]? A [adjective] [noun]!",
-    "What's even worse than a [adjective] [noun]? A [adjective] [noun]!",
-    "What's even worse than a [noun]? A [noun]!",
+    "What's even worse than a [noun]? A [adjective] [noun2]!",
+    "What's even worse than a [adjective] [noun]? A [adjective2] [noun2]!",
+    "What's even worse than a [noun]? A [noun2]!",
     "You know what I hate? [noun.titleCase] murderers.",
     "You know what I hate? [adjective.titleCase] [noun] murderers.",
     "You know what I hate? [noun.titleCase] murderers who are [adjective].",
-    "You know what I hate? [adjective.titleCase] [noun] murderers who are [adjective].",
-    "You know what I hate? [noun.titleCase] murderers who are [adjective] and [adjective].",
+    "You know what I hate? [adjective.titleCase] [noun] murderers who are [adjective2].",
+    "You know what I hate? [noun.titleCase] murderers who are [adjective] and [adjective2].",
     "I WILL NOT ACCEPT THAT [noun.upperCase] IN MY HOUSE!",
     "I WILL NOT ALLOW THAT [noun.upperCase] IN MY HOUSE!",
     "I WILL NOT ACCEPT THAT [adjective.upperCase] [noun.upperCase] IN MY HOUSE!",
@@ -82,12 +82,12 @@ exports.handler = async function(event, context) {
     "[person.upperCase], YOU KNOW WHAT? FUCK THAT [adjective.upperCase] [noun.upperCase] IN PARTICULAR, [person.upperCase]!",
     "[person.upperCase], YOU KNOW WHAT? FUCK YOU!",
     "FUCK YOU, [person.upperCase]!",
-    "What made that [noun] so [adjective]? A [noun] [verbPast] it!",
-    "What made that [adjective] [noun] so [adjective]? A [noun] [verbPast] it!",
-    "What made that [noun] so [adjective]? A [adjective] [noun] [verbPast] it!",
-    "What made that [adjective] [noun] so [adjective]? A [adjective] [noun] [verbPast] it!",
-    "What made that [noun] so [adjective]? A [noun] [verbPast] it, [person]!",
-    "What made that [adjective] [noun] so [adjective]? A [noun] [verbPast] it, [person]!",
+    "What made that [noun] so [adjective]? A [noun2] [verbPast] it!",
+    "What made that [adjective] [noun] so [adjective2]? A [noun2] [verbPast] it!",
+    "What made that [noun] so [adjective]? A [adjective2] [noun2] [verbPast] it!",
+    "What made that [adjective] [noun] so [adjective2]? A [adjective3] [noun2] [verbPast] it!",
+    "What made that [noun] so [adjective]? A [noun2] [verbPast] it, [person]!",
+    "What made that [adjective] [noun] so [adjective2]? A [noun2] [verbPast] it, [person]!",
     "Do NOT remove that [noun] from its display, as bad things will happen.",
     "Do NOT remove that [adjective] [noun] from its display, as bad things will happen.",
     "Do NOT remove that [noun] from its display, as bad things will happen, [person].",
@@ -107,9 +107,8 @@ exports.handler = async function(event, context) {
     "HELP! There is {a} FUCKING [noun.upperCase] IN MY HOUSE AND IT'S [verbIng.upperCase] ME [adverb.upperCase]!",
     "HELP! There is {a} FUCKING [adjective.upperCase] [noun.upperCase] IN MY HOUSE AND IT'S [verbIng.upperCase] ME [adverb.upperCase]!",
     "ATTENTION ALL VIEWERS, THERE IS A [noun.upperCase] ON THE SITE COURT YARD AND IT IS FUCKING [adjective.upperCase]!",
-    "The [noun] goes into the [noun] press that turns the [noun] into a pressed [noun]."
+    "The [noun] goes into the [noun2] press that turns the [noun3] into a pressed [noun4]."
   ];
-
   const noun = [
     "pig","cow","alligator","chicken","zebra","dog","crayfish","pigeon","bird","fish","shark","whale","dolphin","octopus","squid","crab","lobster","shrimp","turtle","frog","toad","snake","lizard","gecko","spider","ant","bee","wasp","fly","mosquito","beetle","butterfly","moth","dragonfly","grasshopper","cricket","cockroach","termite","centipede","millipede","scorpion","tarantula","horse","donkey","cat","jellyfish^0.5","worm^2","wire","fire","hose","house","human","flea","note","ice cube","microphone","water","waiter","animal","creature","muffin","hamster","hamper","child","kid","adult","parent","still water","book","chair","box","couch","sofa","piano","stool","keyboard","mouse","computer","desk","drink","soda","package","bin","garbage can","garbage bin","paint","painting","painter","picture","phone","plant","planter","frame","vaccum","Roomba","robot","stapler","button","pillow","mattress","cushion","wheel","tire","car","truck","semi","wall","spray bottle","outlet","cord","cable","net","network","newt","printer","piston","tank","drill","screwdriver","vent","donut","llama","sign","bubble","rock","pebble","shelf","clock","alien","wet wipe","wipe","pencil","pen","lamp","fridge","world"
   ];
@@ -141,8 +140,7 @@ exports.handler = async function(event, context) {
   const person = [
     "Grandma","Grandpa","Mom","Dad","Mother","Father","Uncle","Sister","Brother","Friend","Teacher","Professor","Mr. President","Mrs. President","Ma'am","Sir","Gentleman","Stranger","Stepmother","Stepfather","Buddy","Dude","Bro","Mr. Vice President","Mrs. Vice President","Kamala Harris","Donald Trump","Joe Biden","Hillary Clinton","Bill Clinton","Bella","Jake","Joe","Jeff","Jeffry","Samantha","James","Jamie","William","Will","Becky","Rebecca","Sara","Bob","Bobby","Richard","Dickie","Rick","Dave","David","Susan","Suzy","Guys","Ladies and Gentlelmen","Ladies","Gentlemen","Dudes","Gals","Girls","Boys","Kids","Children","Adults","Parents","Teachers","Professors","Students","Classmates","Coworkers","Colleagues","Employees","Employers","Bosses","Managers","Supervisors","Subordinates","Peers","Friends","Enemies","Rivals","Competitors","Opponents","Allies","Partners","Associates","Acquaintances","Strangers","Neighbors","Roommates","Housemates","Flatmates","Tenants"
   ];
-
-  function pickWeightedUnique(list, used = new Set()) {
+  function pickWeighted(list, usedSet) {
     let pool = [];
     for (let entry of list) {
       let m = entry.match(/(.*)\^([\d.]+)$/);
@@ -154,18 +152,18 @@ exports.handler = async function(event, context) {
         val = entry;
         weight = 1;
       }
-      if (!used.has(val)) {
+      if (!usedSet.has(val)) {
         for (let i = 0; i < weight; i++) pool.push(val);
       }
     }
     if (!pool.length) return null;
     let sel = pool[Math.floor(Math.random() * pool.length)];
-    used.add(sel);
+    usedSet.add(sel);
     return sel;
   }
-  function randUnique(arr, usedSet) {
-    let filtered = arr.filter(x => !usedSet.has(x));
-    if (filtered.length === 0) return null;
+  function rand(list, usedSet) {
+    let filtered = list.filter(x => !usedSet.has(x));
+    if (!filtered.length) return null;
     let sel = filtered[Math.floor(Math.random() * filtered.length)];
     usedSet.add(sel);
     return sel;
@@ -179,30 +177,24 @@ exports.handler = async function(event, context) {
   function titleCase(str) { return str.replace(/\w\S*/g,w=>w[0].toUpperCase()+w.slice(1).toLowerCase()); }
   function upperCase(str){ return str.toUpperCase(); }
   function lowerCase(str){ return str.toLowerCase(); }
-  function curlyExpand(str, uniqueCache) {
+  function curlyExpand(str) {
     while (/\{([^{}]+)\}/.test(str)) {
       str = str.replace(/\{([^{}]+)\}/g, function(_, c) {
         if (/^\d+-\d+$/.test(c)) {
-          let [a,b] = c.split('-').map(Number); return (a+Math.floor(Math.random()*(b-a+1))).toString();
+          let [a, b] = c.split('-').map(Number);
+          return (a + Math.floor(Math.random() * (b - a + 1))).toString();
         }
-        if (/^import:common-noun$/i.test(c)) return pickWeightedUnique(common_noun, uniqueCache.nounUsed) || '';
-        let options = c.split('|').map(s=>s.trim());
+        if (/^import:common-noun$/i.test(c)) return '[import_common_noun]';
+        let options = c.split('|').map(s => s.trim());
         let weighted = [];
         for (let opt of options) {
           let m = opt.match(/(.*)\^([\d.]+)$/);
           if (m) {
             let [__, txt, w] = m;
-            if (!uniqueCache.strings.has(txt.trim())) {
-              for (let i=0;i<Math.round(Number(w)*100);i++) weighted.push(txt.trim());
-            }
-          } else {
-            if (!uniqueCache.strings.has(opt)) weighted.push(opt);
-          }
+            for (let i = 0; i < Math.round(Number(w) * 100); i++) weighted.push(txt.trim());
+          } else weighted.push(opt);
         }
-        if (weighted.length === 0) weighted = options;
-        let chosen = weighted[Math.floor(Math.random()*weighted.length)];
-        uniqueCache.strings.add(chosen);
-        return chosen;
+        return weighted[Math.floor(Math.random() * weighted.length)];
       });
     }
     return str;
@@ -213,11 +205,11 @@ exports.handler = async function(event, context) {
       .replace(/\[noun\]\{\|s\}/gi, Math.random()<0.5 ? noun : plural(noun));
   }
   function handleA(str, vars) {
-    return str.replace(/\{a\}/gi, aOrAn(vars['noun']||vars['import_common_noun']))
-              .replace(/\{A\}/gi, aOrAn(vars['noun']||vars['import_common_noun']).toUpperCase());
+    return str.replace(/\{a\}/gi, aOrAn(vars['noun']||vars['import_common_noun']||'thing'))
+              .replace(/\{A\}/gi, aOrAn(vars['noun']||vars['import_common_noun']||'thing').toUpperCase());
   }
   function substVars(str, vars) {
-    return str.replace(/\[([a-zA-Z]+)(?:\.([a-zA-Z]+))?\]/g, function(_, v, mod) {
+    return str.replace(/\[([a-zA-Z0-9_]+)(?:\.([a-zA-Z]+))?\]/g, function(_, v, mod) {
       let val = vars[v] || '';
       if (mod==='pluralForm') return plural(val);
       if (mod==='titleCase') return titleCase(val);
@@ -226,40 +218,92 @@ exports.handler = async function(event, context) {
       return val;
     });
   }
+  function findAllVarSlots(template) {
+    // e.g. [noun], [noun2], [noun3], [adjective], [adjective2], etc
+    let slots = {};
+    let re = /\[([a-zA-Z_]+)(\d*)/g;
+    let match;
+    while ((match = /\[([a-zA-Z_]+)(\d*)/g.exec(template)) !== null) {
+      let type = match[1];
+      let num = match[2] ? parseInt(match[2]) : 1;
+      if (!slots[type]) slots[type] = new Set();
+      slots[type].add(num);
+      template = template.slice(match.index + 1); // move forward
+    }
+    // For curly braces (e.g. {import:common-noun}) we’ll handle in code
+    return slots;
+  }
   function getVars(template) {
-    let uniqueCache = {
-      nounUsed: new Set(),
-      adjUsed: new Set(),
-      verbPresentUsed: new Set(),
-      verbPastUsed: new Set(),
-      verbIngUsed: new Set(),
-      verbFutureUsed: new Set(),
-      personUsed: new Set(),
-      adverbUsed: new Set(),
-      locationUsed: new Set(),
-      loctellUsed: new Set(),
-      strings: new Set()
+    let slots = {};
+    let re = /\[([a-zA-Z_]+)(\d*)/g;
+    let match;
+    while ((match = re.exec(template)) !== null) {
+      let type = match[1];
+      let num = match[2] ? parseInt(match[2]) : 1;
+      if (!slots[type]) slots[type] = new Set();
+      slots[type].add(num);
+    }
+    // Also: [import_common_noun], which comes from {import:common-noun} curly expansion.
+    // We'll handle that below.
+    let used = {
+      noun: new Set(),
+      adjective: new Set(),
+      adverb: new Set(),
+      verbPresent: new Set(),
+      verbPast: new Set(),
+      verbIng: new Set(),
+      verbFuture: new Set(),
+      person: new Set(),
+      location: new Set(),
+      loctell: new Set(),
+      import_common_noun: new Set()
     };
     let vars = {};
-    vars.noun = pickWeightedUnique(noun, uniqueCache.nounUsed) || '';
-    vars.adjective = randUnique(adjective, uniqueCache.adjUsed) || '';
-    vars.adverb = randUnique(adverb, uniqueCache.adverbUsed) || '';
-    vars.verbPresent = randUnique(verbPresent, uniqueCache.verbPresentUsed) || '';
-    vars.verbPast = randUnique(verbPast, uniqueCache.verbPastUsed) || '';
-    vars.verbIng = randUnique(verbIng, uniqueCache.verbIngUsed) || '';
-    vars.verbFuture = randUnique(verbFuture, uniqueCache.verbFutureUsed) || '';
-    vars.person = randUnique(person, uniqueCache.personUsed) || '';
-    vars.import_common_noun = pickWeightedUnique(common_noun, uniqueCache.nounUsed) || '';
-    vars.location = curlyExpand(randUnique(location, uniqueCache.locationUsed) || '', uniqueCache);
-    vars.loctell = curlyExpand(randUnique(loctell, uniqueCache.loctellUsed) || '', uniqueCache);
-    vars.uniqueCache = uniqueCache;
+    let typeToList = {
+      noun, adjective, adverb, verbPresent, verbPast, verbIng, verbFuture, person, location, loctell, import_common_noun: common_noun
+    };
+    for (let type in slots) {
+      let list = typeToList[type];
+      if (!list) continue;
+      let nums = Array.from(slots[type]).sort();
+      for (let i = 0; i < nums.length; i++) {
+        let n = nums[i];
+        let key = type + (n > 1 ? n : '');
+        let picked = (type === 'noun' || type === 'import_common_noun')
+          ? pickWeighted(list, used[type])
+          : rand(list, used[type]);
+        vars[key] = picked || '';
+      }
+    }
+    // Now handle curly braces {import:common-noun} and variants
+    let curlyVars = [];
+    let curlyRe = /\{import:common-noun\}/g;
+    let curlyMatch, curlyIdx = 1;
+    while ((curlyMatch = curlyRe.exec(template)) !== null) {
+      let key = "import_common_noun" + (curlyIdx > 1 ? curlyIdx : "");
+      vars[key] = pickWeighted(common_noun, used['import_common_noun']) || '';
+      curlyIdx++;
+    }
+    // Also add a default import_common_noun in case {a} is used after curly import.
+    if (curlyIdx > 1 && !vars["import_common_noun"]) {
+      vars["import_common_noun"] = pickWeighted(common_noun, used['import_common_noun']) || '';
+    }
     return vars;
+  }
+  function postProcessImportCommonNouns(str, vars) {
+    let idx = 1;
+    return str.replace(/\[import_common_noun(\d*)\]/g, (_, num) => {
+      let key = "import_common_noun" + (num ? num : (idx > 1 ? idx : ""));
+      idx++;
+      return vars[key] || '';
+    });
   }
   function generate() {
     let template = outputs[Math.floor(Math.random() * outputs.length)];
-    let vars = getVars(template);
-    let s = template;
-    s = curlyExpand(s, vars.uniqueCache);
+    let curlyExpanded = curlyExpand(template);
+    let vars = getVars(curlyExpanded);
+    let s = curlyExpanded;
+    s = postProcessImportCommonNouns(s, vars);
     s = substVars(s, vars);
     s = handleS(s, vars['noun']);
     s = handleA(s, vars);
@@ -270,7 +314,8 @@ exports.handler = async function(event, context) {
   }
   return {
     statusCode: 200,
-    headers: {"Content-Type": "text/plain"},
+    headers: { "Content-Type": "text/plain" },
     body: generate()
   };
 };
+
