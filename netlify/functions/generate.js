@@ -169,14 +169,15 @@ exports.handler = async function (event, context) {
     return sel;
   }
   function plural(word) {
+    if (!word || typeof word !== "string") return "";
     if (word.endsWith('s')||word.endsWith('x')||word.endsWith('z')||word.endsWith('ch')||word.endsWith('sh')) return word+'es';
     if (word.endsWith('y') && !"aeiou".includes(word[word.length-2])) return word.slice(0,-1)+'ies';
     return word+'s';
   }
-  function aOrAn(word) { return /^[aeiou]/i.test(word) ? 'an' : 'a'; }
-  function titleCase(str) { return str.replace(/\w\S*/g,w=>w[0].toUpperCase()+w.slice(1).toLowerCase()); }
-  function upperCase(str){ return str.toUpperCase(); }
-  function lowerCase(str){ return str.toLowerCase(); }
+  function aOrAn(word) { return /^[aeiou]/i.test(word||'') ? 'an' : 'a'; }
+  function titleCase(str) { return (str||'').replace(/\w\S*/g,w=>w[0].toUpperCase()+w.slice(1).toLowerCase()); }
+  function upperCase(str){ return (str||'').toUpperCase(); }
+  function lowerCase(str){ return (str||'').toLowerCase(); }
   function curlyExpand(str) {
     while (/\{([^{}]+)\}/.test(str)) {
       str = str.replace(/\{([^{}]+)\}/g, function(_, c) {
@@ -200,6 +201,7 @@ exports.handler = async function (event, context) {
     return str;
   }
   function handleS(str, noun) {
+    if (!noun) return str;
     return str.replace(/\[noun\]\{s\}/g, plural(noun))
       .replace(/\[noun\]\{s\}/gi, plural(noun))
       .replace(/\[noun\]\{\|s\}/gi, Math.random()<0.5 ? noun : plural(noun));
@@ -218,21 +220,6 @@ exports.handler = async function (event, context) {
       return val;
     });
   }
-  function findAllVarSlots(template) {
-    // e.g. [noun], [noun2], [noun3], [adjective], [adjective2], etc
-    let slots = {};
-    let re = /\[([a-zA-Z_]+)(\d*)/g;
-    let match;
-    while ((match = /\[([a-zA-Z_]+)(\d*)/g.exec(template)) !== null) {
-      let type = match[1];
-      let num = match[2] ? parseInt(match[2]) : 1;
-      if (!slots[type]) slots[type] = new Set();
-      slots[type].add(num);
-      template = template.slice(match.index + 1); // move forward
-    }
-    // For curly braces (e.g. {import:common-noun}) we’ll handle in code
-    return slots;
-  }
   function getVars(template) {
     let slots = {};
     let re = /\[([a-zA-Z_]+)(\d*)/g;
@@ -243,8 +230,6 @@ exports.handler = async function (event, context) {
       if (!slots[type]) slots[type] = new Set();
       slots[type].add(num);
     }
-    // Also: [import_common_noun], which comes from {import:common-noun} curly expansion.
-    // We'll handle that below.
     let used = {
       noun: new Set(),
       adjective: new Set(),
@@ -275,16 +260,14 @@ exports.handler = async function (event, context) {
         vars[key] = picked || '';
       }
     }
-    // Now handle curly braces {import:common-noun} and variants
     let curlyVars = [];
-    let curlyRe = /\{import:common-noun\}/g;
+    let curlyRe = /\[import_common_noun(\d*)\]/g;
     let curlyMatch, curlyIdx = 1;
     while ((curlyMatch = curlyRe.exec(template)) !== null) {
-      let key = "import_common_noun" + (curlyIdx > 1 ? curlyIdx : "");
+      let key = "import_common_noun" + (curlyMatch[1] ? curlyMatch[1] : (curlyIdx > 1 ? curlyIdx : ""));
       vars[key] = pickWeighted(common_noun, used['import_common_noun']) || '';
       curlyIdx++;
     }
-    // Also add a default import_common_noun in case {a} is used after curly import.
     if (curlyIdx > 1 && !vars["import_common_noun"]) {
       vars["import_common_noun"] = pickWeighted(common_noun, used['import_common_noun']) || '';
     }
@@ -318,4 +301,3 @@ exports.handler = async function (event, context) {
     body: generate()
   };
 };
-
