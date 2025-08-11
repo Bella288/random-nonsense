@@ -107,7 +107,15 @@ exports.handler = async function (event, context) {
     "HELP! There is {a} FUCKING [noun.upperCase] IN MY HOUSE AND IT'S [verbIng.upperCase] ME [adverb.upperCase]!",
     "HELP! There is {a} FUCKING [adjective.upperCase] [noun.upperCase] IN MY HOUSE AND IT'S [verbIng.upperCase] ME [adverb.upperCase]!",
     "ATTENTION ALL VIEWERS, THERE IS A [noun.upperCase] ON THE SITE COURT YARD AND IT IS FUCKING [adjective.upperCase]!",
-    "The [noun] goes into the [noun2] press that turns the [noun3] into a pressed [noun4]."
+    "The [noun] goes into the [noun2] press that presses the [noun3] into a pressed [noun4].",
+    "Umm, guys, why is there {a} [noun] here? Also, why is it [verbIng]?",
+    "Umm, guys, why is there {a} [adjective] [noun] here? Also, why is it [verbIng]?",
+    "Umm, guys, why is there {a} [adjective] [noun] here? Also, why is it [verbIng] [adverb]?",
+    "No, NO! Get away from me, [noun]!",
+    "No, NO! Get away from me, you [adjective] [noun]!",
+    "No, NO! Get away from me, [noun]! Also stop [verbIng]!",
+    "No, NO! Get away from me, you [adjective] [noun]! Also stop [verbIng]",
+    "No, NO! Get away from me, you [adjective] [noun]! Also stop [verbIng] [adverb]!"
   ];
   const noun = [
     "pig","cow","alligator","chicken","zebra","dog","crayfish","pigeon","bird","fish","shark","whale","dolphin","octopus","squid","crab","lobster","shrimp","turtle","frog","toad","snake","lizard","gecko","spider","ant","bee","wasp","fly","mosquito","beetle","butterfly","moth","dragonfly","grasshopper","cricket","cockroach","termite","centipede","millipede","scorpion","tarantula","horse","donkey","cat","jellyfish","worm","wire","fire","hose","house","human","flea","note","ice cube","microphone","water","waiter","animal","creature","muffin","hamster","hamper","child","kid","adult","parent","still water","book","chair","box","couch","sofa","piano","stool","keyboard","mouse","computer","desk","drink","soda","package","bin","garbage can","garbage bin","paint","painting","painter","picture","phone","plant","planter","frame","vaccum","Roomba","robot","stapler","button","pillow","mattress","cushion","wheel","tire","car","truck","semi","wall","spray bottle","outlet","cord","cable","net","network","newt","printer","piston","tank","drill","screwdriver","vent","donut","llama","sign","bubble","rock","pebble","shelf","clock","alien","wet wipe","wipe","pencil","pen","lamp","fridge","world"
