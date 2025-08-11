@@ -142,21 +142,34 @@ exports.handler = async function(event, context) {
     "Grandma","Grandpa","Mom","Dad","Mother","Father","Uncle","Sister","Brother","Friend","Teacher","Professor","Mr. President","Mrs. President","Ma'am","Sir","Gentleman","Stranger","Stepmother","Stepfather","Buddy","Dude","Bro","Mr. Vice President","Mrs. Vice President","Kamala Harris","Donald Trump","Joe Biden","Hillary Clinton","Bill Clinton","Bella","Jake","Joe","Jeff","Jeffry","Samantha","James","Jamie","William","Will","Becky","Rebecca","Sara","Bob","Bobby","Richard","Dickie","Rick","Dave","David","Susan","Suzy","Guys","Ladies and Gentlelmen","Ladies","Gentlemen","Dudes","Gals","Girls","Boys","Kids","Children","Adults","Parents","Teachers","Professors","Students","Classmates","Coworkers","Colleagues","Employees","Employers","Bosses","Managers","Supervisors","Subordinates","Peers","Friends","Enemies","Rivals","Competitors","Opponents","Allies","Partners","Associates","Acquaintances","Strangers","Neighbors","Roommates","Housemates","Flatmates","Tenants"
   ];
 
-  function pickWeighted(list) {
+  function pickWeightedUnique(list, used = new Set()) {
     let pool = [];
     for (let entry of list) {
       let m = entry.match(/(.*)\^([\d.]+)$/);
+      let val, weight;
       if (m) {
-        let [_, val, weight] = m;
-        let n = Math.round(Number(weight)*100);
-        for (let i=0;i<n;i++) pool.push(val.trim());
+        val = m[1].trim();
+        weight = Math.round(Number(m[2]) * 100);
       } else {
-        pool.push(entry);
+        val = entry;
+        weight = 1;
+      }
+      if (!used.has(val)) {
+        for (let i = 0; i < weight; i++) pool.push(val);
       }
     }
-    return pool[Math.floor(Math.random()*pool.length)];
+    if (!pool.length) return null;
+    let sel = pool[Math.floor(Math.random() * pool.length)];
+    used.add(sel);
+    return sel;
   }
-  function rand(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+  function randUnique(arr, usedSet) {
+    let filtered = arr.filter(x => !usedSet.has(x));
+    if (filtered.length === 0) return null;
+    let sel = filtered[Math.floor(Math.random() * filtered.length)];
+    usedSet.add(sel);
+    return sel;
+  }
   function plural(word) {
     if (word.endsWith('s')||word.endsWith('x')||word.endsWith('z')||word.endsWith('ch')||word.endsWith('sh')) return word+'es';
     if (word.endsWith('y') && !"aeiou".includes(word[word.length-2])) return word.slice(0,-1)+'ies';
@@ -166,8 +179,45 @@ exports.handler = async function(event, context) {
   function titleCase(str) { return str.replace(/\w\S*/g,w=>w[0].toUpperCase()+w.slice(1).toLowerCase()); }
   function upperCase(str){ return str.toUpperCase(); }
   function lowerCase(str){ return str.toLowerCase(); }
+  function curlyExpand(str, uniqueCache) {
+    while (/\{([^{}]+)\}/.test(str)) {
+      str = str.replace(/\{([^{}]+)\}/g, function(_, c) {
+        if (/^\d+-\d+$/.test(c)) {
+          let [a,b] = c.split('-').map(Number); return (a+Math.floor(Math.random()*(b-a+1))).toString();
+        }
+        if (/^import:common-noun$/i.test(c)) return pickWeightedUnique(common_noun, uniqueCache.nounUsed) || '';
+        let options = c.split('|').map(s=>s.trim());
+        let weighted = [];
+        for (let opt of options) {
+          let m = opt.match(/(.*)\^([\d.]+)$/);
+          if (m) {
+            let [__, txt, w] = m;
+            if (!uniqueCache.strings.has(txt.trim())) {
+              for (let i=0;i<Math.round(Number(w)*100);i++) weighted.push(txt.trim());
+            }
+          } else {
+            if (!uniqueCache.strings.has(opt)) weighted.push(opt);
+          }
+        }
+        if (weighted.length === 0) weighted = options;
+        let chosen = weighted[Math.floor(Math.random()*weighted.length)];
+        uniqueCache.strings.add(chosen);
+        return chosen;
+      });
+    }
+    return str;
+  }
+  function handleS(str, noun) {
+    return str.replace(/\[noun\]\{s\}/g, plural(noun))
+      .replace(/\[noun\]\{s\}/gi, plural(noun))
+      .replace(/\[noun\]\{\|s\}/gi, Math.random()<0.5 ? noun : plural(noun));
+  }
+  function handleA(str, vars) {
+    return str.replace(/\{a\}/gi, aOrAn(vars['noun']||vars['import_common_noun']))
+              .replace(/\{A\}/gi, aOrAn(vars['noun']||vars['import_common_noun']).toUpperCase());
+  }
   function substVars(str, vars) {
-    return str.replace(/\[([a-zA-Z]+)(?:\.([a-zA-Z]+))?\]/g, (_, v, mod) => {
+    return str.replace(/\[([a-zA-Z]+)(?:\.([a-zA-Z]+))?\]/g, function(_, v, mod) {
       let val = vars[v] || '';
       if (mod==='pluralForm') return plural(val);
       if (mod==='titleCase') return titleCase(val);
@@ -176,65 +226,48 @@ exports.handler = async function(event, context) {
       return val;
     });
   }
-  function curlyExpand(str) {
-    while (/\{([^{}]+)\}/.test(str)) {
-      str = str.replace(/\{([^{}]+)\}/g, (_, c) => {
-        if (/^\d+-\d+$/.test(c)) {
-          let [a,b] = c.split('-').map(Number); return (a+Math.floor(Math.random()*(b-a+1))).toString();
-        }
-        if (/^import:common-noun$/i.test(c)) return pickWeighted(common_noun);
-        let options = c.split('|').map(s=>s.trim());
-        let weighted = [];
-        for (let opt of options) {
-          let m = opt.match(/(.*)\^([\d.]+)$/);
-          if (m) {
-            let [__, txt, w] = m;
-            for (let i=0;i<Math.round(Number(w)*100);i++) weighted.push(txt.trim());
-          } else weighted.push(opt);
-        }
-        return rand(weighted);
-      });
-    }
-    return str;
-  }
-  function handleS(str, noun) {
-    return str.replace(/\[noun\]\{s\}/g, plural(noun))
-      .replace(/\[noun\]\{s\}/gi, plural(noun))
-      .replace(/\[noun\]\{s\}/gi, plural(noun))
-      .replace(/\[noun\]\{\|s\}/gi, Math.random()<0.5 ? noun : plural(noun));
-  }
-  function handleA(str, vars) {
-    return str.replace(/\{a\}/gi, aOrAn(vars['noun']||vars['import_common_noun']))
-              .replace(/\{A\}/gi, aOrAn(vars['noun']||vars['import_common_noun']).toUpperCase());
-  }
-  function genVars() {
-    let nounVal = pickWeighted(noun);
-    return {
-      noun: nounVal,
-      adjective: rand(adjective),
-      adverb: rand(adverb),
-      verbPresent: rand(verbPresent),
-      verbPast: rand(verbPast),
-      verbIng: rand(verbIng),
-      verbFuture: rand(verbFuture),
-      location: curlyExpand(rand(location)),
-      loctell: curlyExpand(rand(loctell)),
-      person: rand(person),
-      import_common_noun: pickWeighted(common_noun)
+  function getVars(template) {
+    let uniqueCache = {
+      nounUsed: new Set(),
+      adjUsed: new Set(),
+      verbPresentUsed: new Set(),
+      verbPastUsed: new Set(),
+      verbIngUsed: new Set(),
+      verbFutureUsed: new Set(),
+      personUsed: new Set(),
+      adverbUsed: new Set(),
+      locationUsed: new Set(),
+      loctellUsed: new Set(),
+      strings: new Set()
     };
+    let vars = {};
+    vars.noun = pickWeightedUnique(noun, uniqueCache.nounUsed) || '';
+    vars.adjective = randUnique(adjective, uniqueCache.adjUsed) || '';
+    vars.adverb = randUnique(adverb, uniqueCache.adverbUsed) || '';
+    vars.verbPresent = randUnique(verbPresent, uniqueCache.verbPresentUsed) || '';
+    vars.verbPast = randUnique(verbPast, uniqueCache.verbPastUsed) || '';
+    vars.verbIng = randUnique(verbIng, uniqueCache.verbIngUsed) || '';
+    vars.verbFuture = randUnique(verbFuture, uniqueCache.verbFutureUsed) || '';
+    vars.person = randUnique(person, uniqueCache.personUsed) || '';
+    vars.import_common_noun = pickWeightedUnique(common_noun, uniqueCache.nounUsed) || '';
+    vars.location = curlyExpand(randUnique(location, uniqueCache.locationUsed) || '', uniqueCache);
+    vars.loctell = curlyExpand(randUnique(loctell, uniqueCache.loctellUsed) || '', uniqueCache);
+    vars.uniqueCache = uniqueCache;
+    return vars;
   }
   function generate() {
-    let template = rand(outputs);
-    let vars = genVars();
+    let template = outputs[Math.floor(Math.random() * outputs.length)];
+    let vars = getVars(template);
     let s = template;
-    s = curlyExpand(s);
+    s = curlyExpand(s, vars.uniqueCache);
     s = substVars(s, vars);
     s = handleS(s, vars['noun']);
     s = handleA(s, vars);
     s = substVars(s, vars);
+    s = s.replace(/\[noun\]s/g, plural(vars['noun']));
+    s = s.replace(/\[noun\]/g, vars['noun']);
     return s;
   }
-
   return {
     statusCode: 200,
     headers: {"Content-Type": "text/plain"},
