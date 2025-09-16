@@ -1,21 +1,3 @@
-function addFavicon(iconUrl) {
-  // Check if a favicon link already exists
-  let link = document.querySelector("link[rel*='icon']");
-
-  // If not, create a new link element
-  if (!link) {
-    link = document.createElement('link');
-    link.type = 'image/x-icon';
-    link.rel = 'icon';
-    document.head.appendChild(link);
-  }
-
-  // Set the favicon's URL
-  link.href = iconUrl;
-}
-
-addFavicon("https://raw.githubusercontent.com/Bella288/random-nonsense/main/images/favicon.ico")
-
 exports.handler = async function (event, context) {
   const outputs = [
     "{This|That} [noun] is so [adjective]!",
